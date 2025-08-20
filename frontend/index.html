@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Serverless Task Manager</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body class="bg-background text-foreground">
+    <!-- Header -->
+    <header class="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-square" class="w-5 h-5 text-primary-foreground"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold">TaskFlow</h1>
+                        <p class="text-xs text-muted-foreground">Serverless Task Manager</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="flex items-center space-x-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        id="userIndicatorContainer" title="Click to manage your user session">
+                        <i data-lucide="user" class="w-3 h-3"></i>
+<span id="userIndicator">user_12345</span>
+                    </div>
+                    <button id="themeToggle" class="btn-ghost btn-sm">
+                        <i data-lucide="sun" class="w-4 h-4"></i>
+                    </button>
+                    <div
+                        class="flex items-center space-x-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
+                        <i data-lucide="zap" class="w-3 h-3"></i>
+                        <span>AWS Powered</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="card">
+                <div class="card-content p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Total Tasks</p>
+                            <p class="text-2xl font-bold" id="totalTasks">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                            <i data-lucide="list-todo" class="w-5 h-5 text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Completed</p>
+                            <p class="text-2xl font-bold" id="completedTasks">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Pending</p>
+                            <p class="text-2xl font-bold" id="pendingTasks">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center">
+                            <i data-lucide="clock" class="w-5 h-5 text-orange-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="card mb-6 bg-blue-500/5 border-blue-500/20">
+            <div class="card-content p-4">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="info" class="w-4 h-4 text-blue-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium text-sm mb-1">Personal Task Space</h3>
+                        <p class="text-xs text-muted-foreground">Your tasks are private to your browser. Click your user ID above to save/restore your session across devices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Task Form -->
+        <div class="card mb-8">
+            <div class="card-header">
+                <h2 class="card-title flex items-center space-x-2">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <span>Add New Task</span>
+                </h2>
+                <p class="card-description">Create a new task to stay organized</p>
+            </div>
+            <div class="card-content space-y-4">
+                <div class="space-y-2">
+                    <label for="todoTitle" class="text-sm font-medium">Task Title</label>
+                    <input type="text" id="todoTitle" class="input" placeholder="What needs to be done?" maxlength="100">
+                </div>
+                <div class="space-y-2">
+                    <label for="todoDescription" class="text-sm font-medium">Description (Optional)</label>
+                    <textarea id="todoDescription" class="input min-h-[80px]"
+                        placeholder="Add more details about this task..." rows="3"></textarea>
+                </div>
+                <button id="addTodo" class="btn btn-primary w-full">
+                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                    Add Task
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center space-x-1 mb-6">
+            <button class="tab-button active" data-filter="all">
+                <i data-lucide="list" class="w-4 h-4 mr-2"></i>
+                All Tasks
+            </button>
+            <button class="tab-button" data-filter="pending">
+                <i data-lucide="clock" class="w-4 h-4 mr-2"></i>
+                Pending
+            </button>
+            <button class="tab-button" data-filter="completed">
+                <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i>
+                Completed
+            </button>
+        </div>
+
+        <!-- Tasks List -->
+        <div class="space-y-4" id="todoItems">
+            <div class="loading-state">
+                <div class="flex items-center justify-center py-12">
+                    <div class="flex items-center space-x-3">
+                        <div class="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full">
+                        </div>
+                        <span class="text-muted-foreground">Loading your tasks...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden">
+            <div class="text-center py-12">
+                <div class="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check-square" class="w-8 h-8 text-muted-foreground"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">No tasks yet</h3>
+                <p class="text-muted-foreground mb-4">Get started by creating your first task above</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-border mt-16">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between text-sm text-muted-foreground">
+                <p>AWS Solutions Architect Associate Graduation Project</p>
+                <div class="flex items-center space-x-4">
+                    <span class="flex items-center space-x-1">
+                        <i data-lucide="server" class="w-3 h-3"></i>
+                        <span>Serverless</span>
+                    </span>
+                    <span class="flex items-center space-x-1">
+                        <i data-lucide="shield-check" class="w-3 h-3"></i>
+                        <span>Secure</span>
+                    </span>
+                    <span class="flex items-center space-x-1">
+                        <i data-lucide="zap" class="w-3 h-3"></i>
+                        <span>Fast</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- User Session Modal -->
+    <div id="userModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="card max-w-md w-full">
+                <div class="card-header">
+                    <h2 class="card-title flex items-center space-x-2">
+                        <i data-lucide="user-cog" class="w-5 h-5"></i>
+                        <span>Manage Your Session</span>
+                    </h2>
+                    <p class="card-description">Save your user ID to access your tasks from other devices</p>
+                </div>
+                <div class="card-content space-y-4">
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium">Your User ID</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="currentUserId" class="input flex-1" readonly>
+                            <button id="copyUserId" class="btn btn-secondary">
+                                <i data-lucide="copy" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-muted-foreground">Save this ID to access your tasks from other browsers/devices</p>
+                    </div>
+                    
+                    <div class="border-t pt-4 space-y-2">
+                        <label class="text-sm font-medium">Restore From User ID</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="restoreUserId" class="input flex-1" placeholder="Paste your saved user ID">
+                            <button id="restoreUser" class="btn btn-primary">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-muted-foreground">Enter a saved user ID to access those tasks</p>
+                    </div>
+                    
+                    <div class="border-t pt-4 space-y-2">
+                        <button id="resetUser" class="btn btn-destructive w-full">
+                            <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                            Start Fresh (New User ID)
+                        </button>
+                        <p class="text-xs text-muted-foreground text-center">This will create a new user ID and hide your current tasks</p>
+                    </div>
+                </div>
+                <div class="card-content pt-0">
+                    <button id="closeModal" class="btn btn-ghost w-full">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
